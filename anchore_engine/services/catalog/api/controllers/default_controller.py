@@ -221,7 +221,7 @@ def subscriptions_subscriptionId_delete(subscriptionId):
 
 # eventlog calls
 # @api.route('/events', methods=['GET', 'POST', 'DELETE'])
-def events_get():
+def events_get(source_service=None, source_host_id=None, resource_type=None, level=None, since=None, before=None, next=None):
     try:
         request_inputs = anchore_engine.services.common.do_request_prep(connexion.request, default_params={})
         with db.session_scope() as session:
@@ -259,6 +259,31 @@ def events_delete():
 
     return (return_object, httpcode)
 
+
+def events_eventId_get(eventId):
+    try:
+        request_inputs = anchore_engine.services.common.do_request_prep(connexion.request, default_params={})
+        with db.session_scope() as session:
+            return_object, httpcode = anchore_engine.services.catalog.catalog_impl.events_eventId(session, request_inputs, eventId)
+
+    except Exception as err:
+        httpcode = 500
+        return_object = str(err)
+
+    return (return_object, httpcode)
+
+
+def events_eventId_delete(eventId):
+    try:
+        request_inputs = anchore_engine.services.common.do_request_prep(connexion.request, default_params={})
+        with db.session_scope() as session:
+            return_object, httpcode = anchore_engine.services.catalog.catalog_impl.events_eventId(session, request_inputs, eventId)
+
+    except Exception as err:
+        httpcode = 500
+        return_object = str(err)
+
+    return (return_object, httpcode)
 
 # user calls
 # @api.route("/users", methods=['GET'])

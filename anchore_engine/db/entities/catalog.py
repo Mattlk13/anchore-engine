@@ -4,10 +4,10 @@ Entities for the catalog service including services, users, images, etc. Pretty 
 """
 import datetime
 
-from sqlalchemy import Column, Integer, String, Boolean, BigInteger, DateTime, LargeBinary
+from sqlalchemy import Column, Integer, String, Boolean, BigInteger, DateTime, LargeBinary, Index
 from sqlalchemy import inspect
 
-from .common import Base, anchore_now, UtilMixin
+from .common import Base, anchore_now, anchore_uuid, UtilMixin, StringJSON
 
 
 class Anchore(Base, UtilMixin):
@@ -111,6 +111,33 @@ class EventLog(Base, UtilMixin):
 
     def __repr__(self):
         return "hostId='%s' message='%s' level='%s'" % (self.hostId, self.message, self.level)
+
+
+class Event(Base, UtilMixin):
+    __tablename__ = 'events'
+
+    generated_uuid = Column(String, primary_key=True, default=anchore_uuid)
+    created_at = Column(Integer, default=anchore_now)
+    resource_user_id = Column(String, nullable=True)
+    resource_id = Column(String, nullable=True)
+    resource_type = Column(String, nullable=True)
+    source_service = Column(String, nullable=True)
+    source_host_id = Column(String, nullable=True)
+    source_request_id = Column(String, nullable=True)
+    type = Column(String)
+    level = Column(String)
+    message = Column(String)
+    details = Column(StringJSON)
+    timestamp = Column(DateTime)
+
+    __table_args__ = (Index('ix_timestamp', timestamp.desc()),
+                      Index('ix_resource_user_id', resource_user_id),
+                      Index('ix_resource_type', resource_type),
+                      Index('ix_source_service', source_service),
+                      Index('ix_level', level))
+
+    def __repr__(self):
+        return "generated_uuid='%s' level='%s' message='%s'" % (self.generated_uuid, self.level, self.message)
 
 
 class QueueItem(Base, UtilMixin):
