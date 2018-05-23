@@ -103,15 +103,15 @@ def _db_to_dict(db_event):
             continue
 
         if key in ['generated_uuid', 'created_at']:
-            msg[key] = value if type(value) != datetime.datetime else value.isoformat()
+            msg[key] = value if type(value) != datetime.datetime else _format_timestamp(value)
         elif value:
             if key.startswith('resource') or key.startswith('source'):
                 key1, key2 = key.split('_', 1)
                 if key1 not in msg['event']:
                     msg['event'][key1] = {}
-                msg['event'][key1][key2] = value if type(value) != datetime.datetime else value.isoformat()
+                msg['event'][key1][key2] = value if type(value) != datetime.datetime else _format_timestamp(value)
             else:
-                msg['event'][key] = value if type(value) != datetime.datetime else value.isoformat()
+                msg['event'][key] = value if type(value) != datetime.datetime else _format_timestamp(value)
 
     return msg
 
@@ -123,8 +123,9 @@ def _dict_to_db(msg):
     event_msg.update(msg)
 
     if event_msg.get('source', None):
-        db_event.source_service = event_msg['source'].get('service', None)
-        db_event.source_host_id = event_msg['source'].get('host_id', None)
+        db_event.source_servicename = event_msg['source'].get('servicename', None)
+        db_event.source_hostid = event_msg['source'].get('hostid', None)
+        db_event.source_base_url = event_msg['source'].get('base_url', None)
         db_event.source_request_id = event_msg['source'].get('request_id', None)
 
     if event_msg.get('resource', None):
@@ -139,3 +140,7 @@ def _dict_to_db(msg):
     db_event.timestamp = dateparser.parse(event_msg['timestamp'])
 
     return db_event
+
+
+def _format_timestamp(ts):
+    return ts.isoformat() + 'Z'

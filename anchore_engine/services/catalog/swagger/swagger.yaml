@@ -676,12 +676,12 @@ paths:
       description: ""
       operationId: "events_get"
       parameters:
-      - name: 'source_service'
+      - name: 'source_servicename'
         in: query
         type: string
         description: ""
         required: false
-      - name: 'source_host_id'
+      - name: 'source_hostid'
         in: query
         type: string
         description: ""
@@ -726,12 +726,12 @@ paths:
       description: ""
       operationId: "events_delete"
       parameters:
-      - name: 'before'
+      - name: 'since'
         in: query
         type: string
         description: ""
         required: false
-      - name: 'since'
+      - name: 'before'
         in: query
         type: string
         description: ""

@@ -7,7 +7,7 @@ import datetime
 from sqlalchemy import Column, Integer, String, Boolean, BigInteger, DateTime, LargeBinary, Index
 from sqlalchemy import inspect
 
-from .common import Base, anchore_now, anchore_uuid, UtilMixin, StringJSON
+from .common import Base, anchore_now, anchore_uuid, UtilMixin, StringJSON, anchore_now_datetime
 
 
 class Anchore(Base, UtilMixin):
@@ -117,12 +117,13 @@ class Event(Base, UtilMixin):
     __tablename__ = 'events'
 
     generated_uuid = Column(String, primary_key=True, default=anchore_uuid)
-    created_at = Column(Integer, default=anchore_now)
+    created_at = Column(DateTime, default=anchore_now_datetime)
     resource_user_id = Column(String, nullable=True)
     resource_id = Column(String, nullable=True)
     resource_type = Column(String, nullable=True)
-    source_service = Column(String, nullable=True)
-    source_host_id = Column(String, nullable=True)
+    source_servicename = Column(String, nullable=True)
+    source_base_url = Column(String, nullable=True)
+    source_hostid = Column(String, nullable=True)
     source_request_id = Column(String, nullable=True)
     type = Column(String)
     level = Column(String)
@@ -133,7 +134,8 @@ class Event(Base, UtilMixin):
     __table_args__ = (Index('ix_timestamp', timestamp.desc()),
                       Index('ix_resource_user_id', resource_user_id),
                       Index('ix_resource_type', resource_type),
-                      Index('ix_source_service', source_service),
+                      Index('ix_source_servicename', source_servicename),
+                      Index('ix_source_hostid', source_hostid),
                       Index('ix_level', level))
 
     def __repr__(self):

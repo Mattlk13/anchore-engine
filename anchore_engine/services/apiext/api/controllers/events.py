@@ -9,7 +9,7 @@ from flask import request
 import anchore_engine.services.common
 
 
-def list_events(source_service=None, source_host_id=None, resource_type=None, level=None, since=None, before=None, next=None):
+def list_events(source_servicename=None, source_hostid=None, resource_type=None, level=None, since=None, before=None, next=None):
     request_inputs = anchore_engine.services.common.do_request_prep(request, default_params={})
     user_auth = request_inputs['auth']
     method = request_inputs['method']
@@ -21,7 +21,7 @@ def list_events(source_service=None, source_host_id=None, resource_type=None, le
     userId, pw = user_auth
 
     try:
-        return_object = catalog.get_events(user_auth, source_service=source_service, source_host_id=source_host_id,
+        return_object = catalog.get_events(user_auth, source_servicename=source_servicename, source_hostid=source_hostid,
                                            resource_type=resource_type, level=level, since=since, before=before, next=next)
         httpcode = 200
     except Exception as err:

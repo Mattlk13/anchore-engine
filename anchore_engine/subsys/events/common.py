@@ -1,23 +1,22 @@
 import datetime
 import json
 
-from anchore_engine.configuration.localconfig import get_host_id
+from anchore_engine.subsys.servicestatus import get_my_service_record
 
 
 class Event(object):
     __type__ = None
 
-    def __init__(self, user_id, level, message, details, service, resource_type, request_id=None, resource_id=None):
+    def __init__(self, user_id, level, message, details, resource_type, request_id=None, resource_id=None):
         self.user_id = user_id
         self.level = level
         self.message = message
         self.details = details if details else {}
         self.timestamp = datetime.datetime.utcnow().isoformat()
-        self.service = service
-        self.host_id = get_host_id()
         self.request_id = request_id
         self.resource_id = resource_id
         self.resource_type = resource_type
+        self.service_record = get_my_service_record()
 
     def to_json(self):
         msg = dict()
@@ -26,11 +25,11 @@ class Event(object):
         msg['message'] = self.message
         msg['details'] = self.details
         msg['timestamp'] = self.timestamp
-        msg['resource'] = {'user_id': self.user_id, 'type': self.resource_type}
-        if self.resource_id:
-            msg['resource']['id'] = self.resource_id
-        msg['source'] = {'service': self.service, 'host_id': self.host_id}
-        if self.request_id:
-            msg['source']['request_id'] = self.request_id
+        msg['resource'] = {'user_id': self.user_id, 'type': self.resource_type, 'id': self.resource_id}
+        msg['source'] = {'request_id': self.request_id}
+        if self.service_record:
+            msg['source']['servicename'] = self.service_record.get('servicename', None)
+            msg['source']['hostid'] = self.service_record.get('hostid', None)
+            msg['source']['base_url'] = self.service_record.get('base_url', None)
 
         return json.dumps(msg)

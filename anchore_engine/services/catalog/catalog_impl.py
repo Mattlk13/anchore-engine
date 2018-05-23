@@ -608,11 +608,11 @@ def events(dbsession, request_inputs, bodycontent=None):
         if method == 'GET':
             dbfilter = dict()
 
-            if params.get('source_service', None):
-                dbfilter['source_service'] = params.get('source_service')
+            if params.get('source_servicename', None):
+                dbfilter['source_servicename'] = params.get('source_servicename')
 
-            if params.get('source_host_id', None):
-                dbfilter['source_host_id'] = params.get('source_host_id')
+            if params.get('source_hostid', None):
+                dbfilter['source_hostid'] = params.get('source_hostid')
 
             if params.get('resource_type', None):
                 dbfilter['resource_type'] = params.get('resource_type')

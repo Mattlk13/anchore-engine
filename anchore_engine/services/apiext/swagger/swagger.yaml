@@ -1239,12 +1239,12 @@ paths:
       summary: List Events
       description: Returns a paginated list of recorded events in the descending order of the event timestamp. Optional query parameters may be used for filtering results
       parameters:
-      - name: 'source_service'
+      - name: 'source_servicename'
         in: query
         type: string
         description: ""
         required: false
-      - name: 'source_host_id'
+      - name: 'source_hostid'
         in: query
         type: string
         description: ""
@@ -2042,9 +2042,11 @@ definitions:
           source:
             type: object
             properties:
-              service:
+              servicename:
                 type: string
-              host_id:
+              hostid:
+                type: string
+              base_url:
                 type: string
               request_id:
                 type: string

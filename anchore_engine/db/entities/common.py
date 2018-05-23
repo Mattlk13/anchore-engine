@@ -83,6 +83,10 @@ def anchore_now():
     return (int(time.time()))
 
 
+def anchore_now_datetime():
+    return datetime.datetime.utcnow()
+
+
 def anchore_uuid():
     return uuid.uuid4().get_hex()
 

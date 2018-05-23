@@ -152,7 +152,7 @@ class FeedsUpdateTask(IAsyncTask):
 
             # Create feed task begin event
             try:
-                catalog.add_event(system_user, FeedSyncBegin(service='Policy Engine', groups=feeds if feeds else 'all'))
+                catalog.add_event(system_user, FeedSyncBegin(groups=feeds if feeds else 'all'))
             except:
                 log.exception('Ignoring error generating error before feed sync')
 
@@ -179,9 +179,9 @@ class FeedsUpdateTask(IAsyncTask):
             # log feed sync event
             try:
                 if error:
-                    catalog.add_event(system_user, FeedSyncFail(service='Policy Engine', groups=feeds if feeds else 'all', error=error))
+                    catalog.add_event(system_user, FeedSyncFail(groups=feeds if feeds else 'all', error=error))
                 else:
-                    catalog.add_event(system_user, FeedSyncComplete(service='Policy Engine', groups=feeds if feeds else 'all'))
+                    catalog.add_event(system_user, FeedSyncComplete(groups=feeds if feeds else 'all'))
             except:
                 log.exception('Ignoring event generation error after feed sync')
 
